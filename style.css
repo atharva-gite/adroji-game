@@ -1,0 +1,1213 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    touch-action: none;
+    -webkit-overflow-scrolling: none;
+    position: fixed;
+}
+
+#game-root {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#game-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+}
+
+.scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.scene.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.fullscreen-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+/* Start Screen */
+#start-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.start-btn {
+    position: relative;
+    z-index: 10;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s;
+}
+
+.start-btn:active {
+    transform: scale(0.95);
+}
+
+.start-btn img {
+    width: 440px;
+    height: auto;
+    max-width: 80vw;
+}
+
+/* Wake-Up Scene */
+#wake-up-scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.sleeping-visual {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Alexa Wake Up Images */
+.alexa-wake-up {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 400px;
+    height: auto;
+    z-index: 10;
+    object-fit: contain;
+}
+
+/* Choice Time State */
+#choice-time-state {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+#choice-time-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 15;
+}
+
+.choice-time-img {
+    width: 80%;
+    max-width: 300px;
+    height: auto;
+}
+
+/* Choice Screen */
+#choice-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: all;
+}
+
+#choice-button-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+}
+
+.choice-button-img {
+    width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+    display: block;
+}
+
+.choice-area-btn {
+    position: absolute;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+}
+
+/* Button areas - positioned to overlay the bottom portion of choice button image */
+#choice-1 {
+    /* Alexa shut up button - left third */
+    bottom: 20px;
+    left: 5%;
+    width: 28%;
+    height: 35%;
+}
+
+#choice-2 {
+    /* Get up button - middle third (Option 3) */
+    bottom: 20px;
+    left: 36%;
+    width: 28%;
+    height: 35%;
+}
+
+#choice-3 {
+    /* Fate button - right third (Option 2) */
+    bottom: 20px;
+    right: 5%;
+    width: 28%;
+    height: 35%;
+}
+
+/* Option 1 Retry */
+#option1-retry {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+}
+
+.retry-btn {
+    position: relative;
+    z-index: 10;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s;
+}
+
+.retry-btn:active {
+    transform: scale(0.95);
+}
+
+.retry-btn img {
+    width: 200px;
+    height: auto;
+    max-width: 60vw;
+}
+
+/* Option Images */
+#option1-image,
+#option2-image,
+#option3-image,
+#option2-alexa-first,
+#option2-alexa-second,
+#option3-alexa-first,
+#option3-alexa-second {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+}
+
+.option-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    height: auto;
+    z-index: 10;
+    object-fit: contain;
+}
+
+/* Choice Videos */
+.choice-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 20;
+}
+
+/* Dress-Up Loading */
+#dress-up-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+#loading-progress {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.loading-progress-img {
+    width: 80%;
+    max-width: 400px;
+    height: auto;
+}
+
+/* Dress-Up Scene */
+#dress-up-scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+/* Dress-Up Root Container */
+#dressup-root {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Background Layer - Fullscreen, properly scaled */
+.dressup-bg-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center;
+    z-index: 1;
+    pointer-events: none;
+    /* Keep background soft/painterly, don't force crisp rendering */
+}
+
+/* CHARACTER ZONE: Character Stack (Centered in Middle - Works on all devices) */
+#character-stack {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    z-index: 2;
+    pointer-events: none;
+    /* Container for all character layers - all share same origin */
+    /* Character is centered both horizontally and vertically using fixed positioning */
+    /* Fixed positioning ensures consistent centering across all devices */
+    /* Character size is controlled by .character-layer max-width/max-height */
+}
+
+.character-layer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1.5);
+    width: auto;
+    height: auto;
+    max-width: min(300vw, 300vh, 95vw, 95vh); /* Much bigger character */
+    max-height: min(300vw, 300vh, 95vw, 95vh); /* Maintains proportionality across all devices */
+    pointer-events: none;
+    object-fit: contain;
+    object-position: center center;
+    /* All layers centered within the container */
+    /* Dynamic dimensions that adapt to screen size - larger character */
+    /* This ensures perfect alignment - all assets use skeleton as reference */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    /* Ensure crisp, pixel-perfect rendering for character */
+}
+
+/* Character Layer Z-Index Order (bottom to top) */
+#dressup-skeleton {
+    z-index: 1;
+}
+
+#dressup-bottom {
+    z-index: 2;
+}
+
+#dressup-top {
+    z-index: 4;
+}
+
+#dressup-outerwear {
+    z-index: 5;
+}
+
+#dressup-shoes {
+    z-index: 6;
+}
+
+#dressup-hair {
+    z-index: 7;
+}
+
+#dressup-hair-accessory {
+    z-index: 8; /* Above hair, below necklace */
+}
+
+#dressup-necklace {
+    z-index: 8;
+}
+
+#dressup-earrings {
+    z-index: 9;
+}
+
+#dressup-bangles {
+    z-index: 10;
+}
+
+#dressup-bag {
+    z-index: 11;
+}
+
+#dressup-eyes {
+    z-index: 12;
+}
+
+#dressup-lips {
+    z-index: 13;
+}
+
+#dressup-star {
+    z-index: 14;
+}
+
+/* UI Layer - Separate from background/character, fixed screen positions */
+#dressup-ui {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    /* UI renders in separate layer, unaffected by background/character scaling */
+}
+
+/* Button Sprite Sheet - Contains all UI buttons visually */
+.button-sprite-sheet {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+    /* Sprite sheet is visible - contains all button graphics */
+}
+
+/* Dress-Up Zone Base */
+.dressup-zone {
+    position: relative;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.ui-btn {
+    pointer-events: auto;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0;
+    transition: transform 0.1s;
+    position: relative;
+    /* Invisible buttons that overlay clickable regions on sprite sheet */
+    min-width: 60px;
+    min-height: 60px;
+}
+
+.ui-btn:active {
+    transform: scale(0.9);
+}
+
+/* TOP ZONE: Category Selectors - Fixed Screen Position */
+#top-zone {
+    position: fixed;
+    top: 30px;
+    left: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    z-index: 20;
+    pointer-events: none;
+}
+
+#top-zone .ui-btn {
+    pointer-events: auto;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+}
+
+/* RIGHT PANEL: Appearance Controls - Fixed Screen Position */
+#right-panel {
+    position: fixed;
+    left: 320px; /* 20px to the right (300 + 20) */
+    top: 100px; /* 5px up (105 - 5) */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 12px;
+    z-index: 21;
+    pointer-events: none;
+    /* Ensure right panel is visible and properly positioned */
+    /* Gap matches top panel for consistent spacing */
+}
+
+#right-panel .ui-btn {
+    pointer-events: auto;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    /* Buttons are visually defined in the sprite sheet */
+}
+
+/* Arrow Container - Only one arrow visible at a time */
+.arrow-container {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1.5);
+    z-index: 25;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.arrow-container.hidden {
+    display: none;
+    pointer-events: none;
+}
+
+.arrow-img {
+    width: 200px; /* Smaller arrows: reduced from 298px */
+    height: auto;
+    display: block;
+    pointer-events: none;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    /* Crisp UI rendering - smaller arrows */
+    /* Maintains proportionality with character size */
+}
+
+/* BOTTOM ZONE: Reset / Done Buttons - Fixed Screen Position */
+#bottom-zone {
+    position: fixed;
+    bottom: 3%;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6%;
+    z-index: 20;
+    pointer-events: none;
+}
+
+#bottom-zone .ui-btn {
+    pointer-events: auto;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+}
+
+#reset-btn {
+    order: 1;
+}
+
+#done-btn {
+    order: 2;
+}
+
+/* Action buttons (Reset/Done) - styled as clickable regions */
+.action-btn {
+    min-width: 120px;
+    min-height: 60px;
+    /* These buttons are clickable regions, visual comes from sprite sheet */
+}
+
+/* Loading Overlay */
+#dressup-loading {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+#dressup-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.loading-img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+    .start-btn img {
+        width: 330px;
+    }
+    
+    .alexa-wake-up {
+        width: 90%;
+    }
+    
+    .category-arrow {
+        width: 40px;
+    }
+    
+    .action-btn {
+        padding: 12px 24px;
+        font-size: 16px;
+    }
+}
+
+/* Prevent text selection */
+* {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================
+   BOBA TEA GAME STYLES
+   ============================================ */
+
+/* Boba Root Container */
+#boba-root {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Background Layer */
+.boba-bg-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Start Screen */
+.boba-start-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.boba-start-screen.hidden {
+    display: none;
+}
+
+.boba-start-bg {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.boba-start-btn {
+    pointer-events: auto;
+    cursor: pointer;
+    position: relative;
+    z-index: 51;
+    max-width: 300px;
+    max-height: 150px;
+    width: auto;
+    height: auto;
+    transition: transform 0.2s;
+}
+
+.boba-start-btn:active {
+    transform: scale(0.95);
+}
+
+/* Game Screen */
+.boba-game-screen {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.boba-game-screen.hidden {
+    display: none;
+}
+
+/* Buttons Sprite Sheet */
+.boba-buttons-sheet {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Cup Container - Centered, Never Moves */
+.boba-cup-container {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Better alignment */
+}
+
+/* Cup Glass - Always Visible */
+.boba-glass {
+    position: relative;
+    width: auto;
+    height: 60vh;
+    max-width: 90vw;
+    max-height: 60vh;
+    object-fit: contain;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* Boba Layers - All positioned absolutely within cup container */
+.boba-layer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: 60vh;
+    max-width: 90vw;
+    max-height: 60vh;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+/* Layer Z-Index Order (Bottom → Top) */
+.boba-seeds-layer {
+    z-index: 1; /* Boba seeds (initial) */
+}
+
+.boba-topping-layer {
+    z-index: 3; /* Topping (above tea base so it's visible) */
+}
+
+.boba-tea-layer {
+    z-index: 2; /* Tea Base (below topping) */
+}
+
+.boba-ice-layer {
+    z-index: 4; /* Ice */
+}
+
+.boba-straw-layer {
+    z-index: 6; /* Top - Straw */
+}
+
+/* Name Display Layers (outside cup, showing names) */
+.boba-name-layer {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    height: auto;
+    max-width: 400px;
+    max-height: 150px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 12;
+}
+
+.boba-tea-name-layer {
+    top: calc(15% - 75px);
+}
+
+.boba-topping-name-layer {
+    top: calc(25% - 75px);
+}
+
+/* Button Areas (invisible clickable regions over buttons.png) */
+.boba-button-area {
+    position: fixed;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    pointer-events: auto;
+    transition: transform 0.1s;
+    width: 100px;
+    height: 60px;
+}
+
+.boba-button-area:active {
+    transform: scale(0.95);
+}
+
+/* Button Positions */
+.boba-top-left {
+    top: 10px;
+    left: 0;
+}
+
+.boba-top-right {
+    top: 10px;
+    right: 0;
+}
+
+.boba-bottom-left {
+    top: 630px;
+    left: 0;
+}
+
+.boba-bottom-middle {
+    top: 630px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.boba-bottom-right {
+    top: 630px;
+    right: 0;
+}
+
+.boba-done-position {
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Done Button Image (visual) */
+.boba-done-button-img {
+    position: fixed;
+    top: 2%;
+    left: 43%;
+    transform: translateX(-50%) scale(1.7);
+    width: auto;
+    height: auto;
+    /* max-width: 200px; */
+    /* max-height: 80px; */
+    object-fit: contain;
+    z-index: 11;
+    pointer-events: none;
+}
+
+/* Option Button Container (not rendering image, just for state) */
+.boba-option-button-container {
+    display: none; /* Not rendering the option button image */
+}
+
+/* Final Screen */
+.boba-final-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+}
+
+.boba-final-screen.hidden {
+    display: none;
+}
+
+.boba-final-screen img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+/* ============================================
+   PART 4 - PLACES SYSTEM STYLES
+   ============================================ */
+
+/* PART 4.1 - Place Selection Hub */
+#place-selection-root {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.place-selection-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.place-buttons-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.place-dialogue-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.place-buttons-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.place-button-area {
+    position: absolute;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 11;
+    /* Cover larger areas to ensure clickability - arranged vertically */
+    width: 80%;
+    height: 20%;
+    left: 10%;
+    right: 10%;
+}
+
+/* Position the 4 place buttons - vertical layout matching image */
+/* Top panel: Luxembourg */
+.place-button-area[data-place="luxembourg"] {
+    top: 5%;
+}
+
+/* Second panel: Seine */
+.place-button-area[data-place="seine"] {
+    top: 28%;
+}
+
+/* Third panel: Vosges */
+.place-button-area[data-place="vosges"] {
+    top: 51%;
+}
+
+/* Bottom panel: Palais Royal */
+.place-button-area[data-place="palais"] {
+    top: 74%;
+}
+
+/* PART 4.2 - Place Detail Screen */
+#place-detail-root {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.place-detail-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.place-name-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 25; /* Above video to remain visible during playback */
+}
+
+.place-name-img {
+    position: absolute;
+    width: auto;
+    height: auto;
+    max-width: 25vw;
+    max-height: 20vh;
+    object-fit: contain;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 26; /* Above name card and video */
+    transition: transform 0.1s;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.place-name-img:active {
+    transform: translateX(-50%) scale(0.95);
+}
+
+/* Position name images - stacked vertically in center */
+.place-name-img[data-name-index="0"] {
+    top: 35%;
+}
+
+.place-name-img[data-name-index="1"] {
+    top: 55%;
+}
+
+.place-use-button {
+    position: absolute;
+    width: auto;
+    height: auto;
+    max-width: 20vw;
+    max-height: 20vh;
+    object-fit: contain;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 27; /* Above everything to remain clickable */
+    bottom: 15%;
+    right: 10%;
+    transition: transform 0.1s;
+}
+
+.place-use-button:active {
+    transform: scale(0.95);
+}
+
+.place-back-button {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: auto;
+    height: auto;
+    max-width: 15vw;
+    max-height: 15vh;
+    object-fit: contain;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 27;
+    transition: transform 0.1s;
+    transform: scale(1.7);
+}
+
+.place-back-button:active {
+    transform: scale(1.7) scale(0.95);
+}
+
+.place-forward-button {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    width: auto;
+    height: auto;
+    max-width: 15vw;
+    max-height: 15vh;
+    object-fit: contain;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 27;
+    transition: transform 0.1s;
+    transform: scale(1.7);
+}
+
+.place-forward-button:active {
+    transform: scale(1.7) scale(0.95);
+}
+
+.place-inbox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 24; /* Above video, below name card */
+}
+
+.place-inbox.hidden {
+    display: none;
+}
+
+.place-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 15; /* Below name card so cardholder remains visible */
+    pointer-events: none;
+}
+
+.place-video.hidden {
+    display: none;
+}
+
+.place-audio {
+    display: none;
+}
+
+/* Ending Scene */
+#ending-loading-root {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+.ending-loading-frame {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+#ending-root {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.ending-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 1;
+    cursor: pointer;
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Adroji in Paris</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-root">
+    <div id="game-container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="scene active">
+            <img src="assets/adroji game/starting page/adroji in paris.png" alt="Adroji in Paris" class="fullscreen-bg">
+            <button id="start-button" class="start-btn">
+                <img src="assets/adroji game/starting page/start_button.png" alt="Start">
+            </button>
+        </div>
+
+        <!-- Wake-Up Scene -->
+        <div id="wake-up-scene" class="scene">
+            <img src="assets/adroji game/wake up pt 1/bg alexawakeup.png" alt="Background" class="fullscreen-bg">
+            
+            <!-- Alexa Wake Up Images -->
+            <img id="alexa-wake-up-1" src="assets/adroji game/wake up pt 1/alexa__wake_up1.png" alt="Alexa 1" class="alexa-wake-up hidden">
+            <img id="alexa-wake-up-2" src="assets/adroji game/wake up pt 1/alexa__wake_up2.png" alt="Alexa 2" class="alexa-wake-up hidden">
+            <img id="alexa-wake-up-3" src="assets/adroji game/wake up pt 1/alexa__wake_up3.png" alt="Alexa 3" class="alexa-wake-up hidden">
+
+            <!-- Choice Time with Sleeping Background -->
+            <div id="choice-time-state" class="hidden">
+                <img src="assets/adroji game/wake up pt 1/sleeping.png" alt="Sleeping" class="sleeping-visual">
+                <div id="choice-time-overlay">
+                    <img src="assets/adroji game/wake up pt 1/choice time.png" alt="Choice Time" class="choice-time-img">
+                </div>
+            </div>
+
+            <!-- Choice Button Screen -->
+            <div id="choice-screen" class="hidden">
+                <img src="assets/adroji game/wake up pt 1/sleeping.png" alt="Sleeping" class="sleeping-visual">
+                <div id="choice-button-container">
+                    <img src="assets/adroji game/wake up pt 1/choice button.png" alt="Choice Button" class="choice-button-img">
+                    <!-- Invisible clickable areas for the 3 buttons -->
+                    <button class="choice-area-btn" id="choice-1" data-choice="1"></button>
+                    <button class="choice-area-btn" id="choice-2" data-choice="3"></button>
+                    <button class="choice-area-btn" id="choice-3" data-choice="2"></button>
+                </div>
+            </div>
+
+            <!-- Option Images -->
+            <div id="option1-image" class="hidden">
+                <img src="assets/adroji game/wake up pt 1/sleeping.png" alt="Sleeping" class="sleeping-visual">
+                <img src="assets/adroji game/wake up pt 1/option1.png" alt="Option 1" class="option-img">
+            </div>
+            <div id="option2-image" class="hidden">
+                <img src="assets/adroji game/wake up pt 1/option 3 bg.png" alt="Background" class="sleeping-visual">
+                <img src="assets/adroji game/wake up pt 1/option2.png" alt="Option 2" class="option-img">
+            </div>
+            <div id="option3-image" class="hidden">
+                <img src="assets/adroji game/wake up pt 1/option 3 bg.png" alt="Background" class="sleeping-visual">
+                <img src="assets/adroji game/wake up pt 1/option3.png" alt="Option 3" class="option-img">
+            </div>
+
+            <!-- Option 2 and 3 Alexa Images -->
+            <div id="option2-alexa-first" class="hidden">
+                <img src="assets/adroji game/wake up pt 1/option 3 bg.png" alt="Background" class="sleeping-visual">
+                <img src="assets/adroji game/wake up pt 1/option 2 and 3 alexa_first.png" alt="Alexa First" class="option-img">
+            </div>
+            <div id="option2-alexa-second" class="hidden">
+                <img src="assets/adroji game/wake up pt 1/option 3 bg.png" alt="Background" class="sleeping-visual">
+                <img src="assets/adroji game/wake up pt 1/option 2 and 3 alexa_second.png" alt="Alexa Second" class="option-img">
+            </div>
+            <div id="option3-alexa-first" class="hidden">
+                <img src="assets/adroji game/wake up pt 1/option 3 bg.png" alt="Background" class="sleeping-visual">
+                <img src="assets/adroji game/wake up pt 1/option 2 and 3 alexa_first.png" alt="Alexa First" class="option-img">
+            </div>
+            <div id="option3-alexa-second" class="hidden">
+                <img src="assets/adroji game/wake up pt 1/option 3 bg.png" alt="Background" class="sleeping-visual">
+                <img src="assets/adroji game/wake up pt 1/option 2 and 3 alexa_second.png" alt="Alexa Second" class="option-img">
+            </div>
+
+            <!-- Option 1 Retry -->
+            <div id="option1-retry" class="hidden">
+                <img src="assets/adroji game/wake up pt 1/option 1 retry bg.png" alt="Retry Background" class="fullscreen-bg">
+                <button id="retry-button" class="retry-btn">
+                    <img src="assets/adroji game/wake up pt 1/option1 retry button.png" alt="Retry">
+                </button>
+            </div>
+
+            <!-- Option 2 Animation -->
+            <video id="option2-video" class="choice-video hidden" autoplay muted playsinline>
+                <source src="assets/adroji game/wake up pt 1/option_2_animation.mp4" type="video/mp4">
+            </video>
+
+            <!-- Option 3 Animation -->
+            <video id="option3-video" class="choice-video hidden" autoplay muted playsinline>
+                <source src="assets/adroji game/wake up pt 1/option_3_animation.mp4" type="video/mp4">
+            </video>
+
+            <!-- Sleeping Video -->
+            <video id="sleeping-video" class="choice-video hidden" autoplay muted playsinline>
+                <source src="assets/adroji game/wake up pt 1/sleeping.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <!-- Dress-Up Loading -->
+        <div id="dress-up-loading" class="scene">
+            <img src="assets/adroji game/dress up pt 2/loading_bg.png" alt="Loading Background" class="fullscreen-bg">
+            <div id="loading-progress">
+                <img id="loading-progress-frame" src="assets/adroji game/dress up pt 2/loading_1.png" alt="Loading" class="loading-progress-img">
+            </div>
+        </div>
+
+        <!-- Dress-Up Scene -->
+        <div id="dress-up-scene" class="scene">
+            <!-- Dress-Up Root Container (Created Dynamically) -->
+        </div>
+
+        <!-- Boba Tea Scene -->
+        <div id="boba-scene" class="scene">
+            <!-- Boba Root Container (Created Dynamically) -->
+        </div>
+
+        <!-- PART 4.1 - Place Selection Hub -->
+        <div id="place-selection-scene" class="scene">
+            <!-- Place Selection Root Container (Created Dynamically) -->
+        </div>
+
+        <!-- PART 4.2 - Place Detail Scenes -->
+        <div id="place-detail-scene" class="scene">
+            <!-- Place Detail Root Container (Created Dynamically) -->
+        </div>
+
+        <!-- Ending Scene -->
+        <div id="ending-scene" class="scene">
+            <!-- Ending Root Container (Created Dynamically) -->
+        </div>
+    </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
