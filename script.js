@@ -767,17 +767,22 @@ function cycleBobaCategory(category, direction) {
 
 // Update Boba Layers (Swap images only, no re-render)
 function updateBobaLayers() {
-    // Update Tea Base (renders inside cup)
+    // Get all layer elements first
     const teaBaseLayer = document.getElementById('boba-tea-base');
-    if (teaBaseLayer) {
-        const teaBase = teaBases[bobaState.teaBase];
-        if (teaBase) {
-            teaBaseLayer.src = `assets/adroji game/boba tea pt3/${teaBase.base}`;
-            teaBaseLayer.classList.remove('hidden');
-        } else {
-            teaBaseLayer.classList.add('hidden');
-        }
+    const toppingLayer = document.getElementById('boba-topping');
+    const bobaSeeds = document.getElementById('boba-seeds');
+    
+    // Only show layers if user has made a selection (starts empty)
+    if (!bobaState.hasMadeSelection) {
+        // Keep everything hidden - empty glass
+        if (toppingLayer) toppingLayer.classList.add('hidden');
+        if (teaBaseLayer) teaBaseLayer.classList.add('hidden');
+        if (bobaSeeds) bobaSeeds.classList.add('hidden');
+        return;
     }
+    
+    // Update Tea Base (renders inside cup) - only if no combined image will be shown
+    // We'll handle this in the topping section
     
     // Update Tea Base Name Display
     const teaBaseNameLayer = document.getElementById('boba-tea-name');
@@ -791,31 +796,17 @@ function updateBobaLayers() {
         }
     }
     
-    // Only show layers if user has made a selection (starts empty)
-    if (!bobaState.hasMadeSelection) {
-        // Keep everything hidden - empty glass
-        const toppingLayer = document.getElementById('boba-topping');
-        const teaBaseLayer = document.getElementById('boba-tea-base');
-        const bobaSeeds = document.getElementById('boba-seeds');
-        if (toppingLayer) toppingLayer.classList.add('hidden');
-        if (teaBaseLayer) teaBaseLayer.classList.add('hidden');
-        if (bobaSeeds) bobaSeeds.classList.add('hidden');
-        return;
-    }
-    
     // Update Topping (use combined image with tea base)
-    const toppingLayer = document.getElementById('boba-topping');
-    const bobaSeeds = document.getElementById('boba-seeds');
-    
     if (toppingLayer) {
         // Always use combined image when both tea and topping are selected
         // The combined image shows the topping WITH the tea base
         const combinedFile = getCombinedToppingImage(bobaState.teaBase, bobaState.topping);
+        
         if (combinedFile) {
+            // Show combined image (e.g., LBT jinzou.png when LBT + jinzou selected)
             toppingLayer.src = `assets/adroji game/boba tea pt3/${combinedFile}`;
             toppingLayer.classList.remove('hidden');
             // Hide tea base layer when combined topping is shown (combined image includes tea)
-            const teaBaseLayer = document.getElementById('boba-tea-base');
             if (teaBaseLayer) {
                 teaBaseLayer.classList.add('hidden');
             }
@@ -824,13 +815,12 @@ function updateBobaLayers() {
                 bobaSeeds.classList.remove('hidden');
             }
         } else {
-            // If no combined file, show base topping and tea separately
+            // No combined file - show tea base separately if tea is selected
             toppingLayer.classList.add('hidden');
-            // Show tea base layer if tea is selected
-            const teaBaseLayer = document.getElementById('boba-tea-base');
             if (teaBaseLayer) {
                 const teaBase = teaBases[bobaState.teaBase];
                 if (teaBase) {
+                    teaBaseLayer.src = `assets/adroji game/boba tea pt3/${teaBase.base}`;
                     teaBaseLayer.classList.remove('hidden');
                 } else {
                     teaBaseLayer.classList.add('hidden');
@@ -1882,6 +1872,13 @@ function playEndingLoadingSequence(callback) {
     const loadingRoot = document.createElement('div');
     loadingRoot.id = 'ending-loading-root';
 
+    // Background for loading sequence
+    const loadingBg = document.createElement('img');
+    loadingBg.src = 'assets/adroji game/ending/place_loading_final_bg.png';
+    loadingBg.alt = 'Loading Background';
+    loadingBg.className = 'ending-loading-bg';
+    loadingRoot.appendChild(loadingBg);
+
     const loadingFrame = document.createElement('img');
     loadingFrame.id = 'ending-loading-frame';
     loadingFrame.className = 'ending-loading-frame';
@@ -1927,6 +1924,13 @@ function initEnding() {
     // Create root container
     const root = document.createElement('div');
     root.id = 'ending-root';
+
+    // Background for ending slides
+    const endBg = document.createElement('img');
+    endBg.src = 'assets/adroji game/ending/end_slide-bg.png';
+    endBg.alt = 'End Background';
+    endBg.className = 'ending-bg';
+    root.appendChild(endBg);
 
     // Show first end slide
     const endSlide = document.createElement('img');
