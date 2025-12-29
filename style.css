@@ -4,28 +4,51 @@
     box-sizing: border-box;
 }
 
+:root {
+    --vh: 1vh; /* Fallback, will be set by JavaScript */
+    --safe-area-bottom: 0px; /* Fallback, will be set by JavaScript */
+}
+
 html, body {
     width: 100%;
     height: 100%;
+    height: calc(var(--vh, 1vh) * 100); /* Use JavaScript-calculated height */
+    height: 100dvh; /* Use dynamic viewport height for mobile (modern browsers) */
+    min-height: -webkit-fill-available; /* iOS Safari fix */
     overflow: hidden;
     touch-action: none;
     -webkit-overflow-scrolling: none;
     position: fixed;
+    /* Safe area insets for iPhone notch and home indicator */
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
 }
 
 #game-root {
     position: relative;
     width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: calc(var(--vh, 1vh) * 100);
+    height: 100dvh; /* Use dynamic viewport height */
+    min-height: -webkit-fill-available; /* iOS Safari fix */
     overflow: hidden;
+    /* Account for safe areas */
+    padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 #game-container {
     width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: calc(var(--vh, 1vh) * 100);
+    height: 100dvh; /* Use dynamic viewport height */
+    min-height: -webkit-fill-available; /* iOS Safari fix */
     position: relative;
     background: #000;
     overflow: hidden;
+    /* Account for safe areas */
+    padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 .scene {
@@ -186,7 +209,7 @@ html, body {
 /* Button areas - positioned to overlay the bottom portion of choice button image */
 #choice-1 {
     /* Alexa shut up button - left third */
-    bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0));
     left: 5%;
     width: 28%;
     height: 35%;
@@ -194,7 +217,7 @@ html, body {
 
 #choice-2 {
     /* Get up button - middle third (Option 3) */
-    bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0));
     left: 36%;
     width: 28%;
     height: 35%;
@@ -202,7 +225,7 @@ html, body {
 
 #choice-3 {
     /* Fate button - right third (Option 2) */
-    bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0));
     right: 5%;
     width: 28%;
     height: 35%;
@@ -561,13 +584,14 @@ html, body {
 /* BOTTOM ZONE: Reset / Done Buttons - Fixed Screen Position */
 #bottom-zone {
     position: fixed;
-    bottom: 3%;
+    bottom: calc(3% + env(safe-area-inset-bottom, 0));
     left: 0;
     right: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 6%;
+    padding-bottom: calc(6% + env(safe-area-inset-bottom, 0));
     z-index: 20;
     pointer-events: none;
 }
@@ -868,19 +892,22 @@ html, body {
 }
 
 .boba-bottom-left {
-    top: 630px;
+    bottom: calc(10% + env(safe-area-inset-bottom, 0));
     left: 0;
+    top: auto;
 }
 
 .boba-bottom-middle {
-    top: 630px;
+    bottom: calc(10% + env(safe-area-inset-bottom, 0));
     left: 50%;
     transform: translateX(-50%);
+    top: auto;
 }
 
 .boba-bottom-right {
-    top: 630px;
+    bottom: calc(10% + env(safe-area-inset-bottom, 0));
     right: 0;
+    top: auto;
 }
 
 .boba-done-position {
@@ -1091,7 +1118,7 @@ html, body {
     pointer-events: auto;
     cursor: pointer;
     z-index: 27; /* Above everything to remain clickable */
-    bottom: 15%;
+    bottom: calc(15% + env(safe-area-inset-bottom, 0));
     right: 10%;
     transition: transform 0.1s;
 }

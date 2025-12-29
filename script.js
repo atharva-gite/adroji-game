@@ -1949,7 +1949,27 @@ function initEnding() {
     endingScene.appendChild(root);
 }
 
+// Fix viewport height for iOS devices (iPhone 13, etc.)
+function fixViewportHeight() {
+    // Set CSS custom property for actual viewport height
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    
+    // Also set safe area insets if available
+    const safeAreaBottom = window.safeArea?.bottom || 0;
+    document.documentElement.style.setProperty('--safe-area-bottom', `${safeAreaBottom}px`);
+}
+
 // Initialize game on load
 document.addEventListener('DOMContentLoaded', () => {
+    // Fix viewport height for mobile devices
+    fixViewportHeight();
+    
+    // Recalculate on resize/orientation change
+    window.addEventListener('resize', fixViewportHeight);
+    window.addEventListener('orientationchange', () => {
+        setTimeout(fixViewportHeight, 100);
+    });
+    
     initStartScreen();
 });
