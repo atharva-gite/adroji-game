@@ -182,18 +182,29 @@ html, body {
 
 #choice-button-container {
     position: absolute;
-    bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0));
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
     max-width: 400px;
 }
 
+.choice-textbox-img {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+    display: block;
+}
+
 .choice-button-img {
     width: 100%;
     height: auto;
     position: relative;
-    z-index: 1;
+    z-index: 2;
     pointer-events: none;
     display: block;
 }
