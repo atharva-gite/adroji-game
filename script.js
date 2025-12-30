@@ -1547,8 +1547,9 @@ const placeConfig = {
         card: 'place_des_vosges.namecard.png',
         names: [
             { img: 'adi 1.png', audio: 'adi.ogg', video: 'redpandacompress_1767002235.MP4' },
-            { img: 'abonti 1.png', audio: 'adi.ogg', video: 'redpandacompress_1767002235.MP4' },
-
+            { img: 'abonti 1.png', audio: 'abonti1.ogg', video: 'redpandacompress_1767002235.MP4' },
+            { img: 'abonti 1.png', audio: 'abonti2.ogg', video: 'redpandacompress_1767002235.MP4' },
+            { img: 'abonti 1.png', audio: 'abonti3.ogg', video: 'redpandacompress_1767002235.MP4' },
         ],
         folder: 'vosges'
     }
