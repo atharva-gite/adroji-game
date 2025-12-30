@@ -833,7 +833,7 @@ top-zone .ui-btn {
 /* Layer Z-Index Order: glass (bottom) → base → topping → ice → straw */
 /* When combination exists: glass (bottom) → combination → ice → straw */
 .boba-seeds-layer {
-    z-index: 1; /* Boba seeds (initial) */
+    z-index: 2; /* Boba seeds (initial) */
 }
 
 .boba-tea-layer {
@@ -841,11 +841,11 @@ top-zone .ui-btn {
 }
 
 .boba-topping-layer {
-    z-index: 3; /* Topping (above base) */
+    z-index: 1; /* Topping (above base) */
 }
 
 .boba-topping-layer.combined-image {
-    z-index: 3; /* Combined image replaces base+topping, same level as topping */
+    z-index: 1; /* Combined image replaces base+topping, same level as topping */
 }
 
 .boba-ice-layer {
@@ -855,6 +855,18 @@ top-zone .ui-btn {
 .boba-straw-layer {
     z-index: 5; /* Top - Straw (above ice) */
 }
+.boba-glass { z-index: 1; }
+
+.boba-seeds-layer {
+    z-index: 2;
+    clip-path: inset(65% 0 0 0); /* bottom-fill */
+}
+
+.boba-topping-layer.combined-image {
+    z-index: 3;
+}
+
+
 
 /* Name Display Layers (centered, larger - 40% bigger) */
 .boba-name-layer {
@@ -873,8 +885,8 @@ top-zone .ui-btn {
 
 /* Position name layers - moved even further up (50px more) */
 .boba-tea-name-layer {
-    top: calc(9% + 120px + 30px - 30px - 50px - 50px); /* Moved 50px more up */
-    transform: translate(-50%, 0); /* Center horizontally, use top position */
+    top: 70px; /* Moved 50px more up */
+    transform: translate(-50%, -6%); /* Center horizontally, use top position */
 }
 
 .boba-topping-name-layer {

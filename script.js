@@ -809,6 +809,42 @@ function updateBobaDisplay() {
         } else {
             strawLayer.classList.add('hidden');
         }
+    if (bobaState.topping >= 0 && bobaState.teaBase >= 0) {
+            const combinedFile = getCombinedToppingImage(bobaState.teaBase, bobaState.topping);
+            const topping = toppings[bobaState.topping];
+            const teaBase = teaBases[bobaState.teaBase];
+        
+            if (combinedFile) {
+                toppingLayer.src = `assets/adroji game/boba tea pt3/${combinedFile}`;
+                toppingLayer.classList.remove('hidden');
+                toppingLayer.classList.add('combined-image');
+                teaBaseLayer.classList.add('hidden');
+            } else {
+                toppingLayer.classList.remove('combined-image');
+                toppingLayer.src = `assets/adroji game/boba tea pt3/${topping.file}`;
+                toppingLayer.classList.remove('hidden');
+                teaBaseLayer.src = `assets/adroji game/boba tea pt3/${teaBase.base}`;
+                teaBaseLayer.classList.remove('hidden');
+            }
+        }
+    // =========================
+// Boba seed layer rendering
+// =========================
+// ===============================
+// Bottom-fill topping render layer
+// ===============================
+const bottomToppingLayer = document.getElementById('boba-seeds');
+const selectedTopping = toppings[bobaState.topping];
+
+if (bottomToppingLayer && selectedTopping) {
+    bottomToppingLayer.src =
+        `assets/adroji game/boba tea pt3/${selectedTopping.file}`;
+    bottomToppingLayer.classList.remove('hidden');
+} else if (bottomToppingLayer) {
+    bottomToppingLayer.classList.add('hidden');
+}
+
+        
     }
 }
 
