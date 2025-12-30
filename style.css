@@ -416,12 +416,12 @@ html, body {
     z-index: 1;
 }
 
-#dressup-shoes {
-    z-index: 1.5; /* Under bottoms */
-}
-
 #dressup-bottom {
     z-index: 2;
+}
+
+#dressup-shoes {
+    z-index: 3; /* Above bottoms, below tops */
 }
 
 #dressup-top {
@@ -788,7 +788,7 @@ top-zone .ui-btn {
     width: 100vw;
     height: 100vh;
     object-fit: contain;
-    pointer-events: none;
+    pointer-events: none; /* Let button areas handle clicks */
     z-index: 5;
 }
 
@@ -808,28 +808,24 @@ top-zone .ui-btn {
     /* Better alignment */
 }
 
-/* Cup Glass - Always Visible */
+/* Cup Glass - Always Visible - same dimensions as all other images */
 .boba-glass {
     position: relative;
-    width: auto;
-    height: 60vh;
-    max-width: 90vw;
-    max-height: 60vh;
+    width: 100vw;
+    height: 100vh;
     object-fit: contain;
     z-index: 5;
     pointer-events: none;
 }
 
-/* Boba Layers - All positioned absolutely within cup container */
+/* Boba Layers - All positioned absolutely within cup container - same dimensions */
 .boba-layer {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: auto;
-    height: 60vh;
-    max-width: 90vw;
-    max-height: 60vh;
+    width: 100vw;
+    height: 100vh;
     object-fit: contain;
     pointer-events: none;
 }
@@ -841,6 +837,10 @@ top-zone .ui-btn {
 
 .boba-topping-layer {
     z-index: 3; /* Topping (above tea base so it's visible) */
+}
+
+.boba-topping-layer.combined-image {
+    z-index: 7; /* Combined images on topmost */
 }
 
 .boba-tea-layer {
@@ -855,30 +855,35 @@ top-zone .ui-btn {
     z-index: 6; /* Top - Straw */
 }
 
-/* Name Display Layers (outside cup, showing names) */
+/* Name Display Layers (centered, larger) */
 .boba-name-layer {
     position: fixed;
     left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: auto;
     height: auto;
-    max-width: 400px;
-    max-height: 150px;
+    max-width: 95vw;
+    max-height: 70vh;
     object-fit: contain;
     pointer-events: none;
     z-index: 12;
 }
 
+/* Position name layers - override the default 50% top with specific positions, moved 30px up */
 .boba-tea-name-layer {
-    top: calc(15% - 75px);
+    top: calc(9% + 120px + 30px - 30px);
+    transform: translate(-50%, 0); /* Center horizontally, use top position */
 }
 
 .boba-topping-name-layer {
-    top: calc(25% - 75px);
+    top: calc(10% + 120px + 60px - 30px);
+    transform: translate(-50%, 0); /* Center horizontally, use top position */
 }
 
 .boba-sugar-name-layer {
-    top: calc(35% - 75px);
+    top: calc(2% + 120px + 30px + 250px + 30px + 250px + 30px - 30px);
+    transform: translate(-50%, 0); /* Center horizontally, use top position */
 }
 
 /* Button Areas (invisible clickable regions over buttons.png) */
@@ -887,11 +892,11 @@ top-zone .ui-btn {
     background: transparent;
     border: none;
     cursor: pointer;
-    z-index: 10;
+    z-index: 15;
     pointer-events: auto;
     transition: transform 0.1s;
-    width: 100px;
-    height: 60px;
+    width: 120px;
+    height: 80px;
 }
 
 .boba-button-area:active {
@@ -929,8 +934,8 @@ top-zone .ui-btn {
 }
 
 .boba-done-position {
-    top: 10px;
-    left: 50%;
+    top: 20px;
+    left: 45%;
     transform: translateX(-50%);
 }
 
@@ -949,7 +954,7 @@ top-zone .ui-btn {
     pointer-events: none;
 }
 
-/* Option Button Container (not rendering image, just for state) */
+/* Option Button */
 .boba-option-button {
     position: fixed;
     left: 50%;
@@ -957,8 +962,8 @@ top-zone .ui-btn {
     transform: translate(-50%, -50%);
     width: auto;
     height: auto;
-    max-width: 200px;
-    max-height: 100px;
+    max-width: 150px;
+    max-height: 80px;
     object-fit: contain;
     z-index: 11;
     pointer-events: auto;
@@ -987,8 +992,8 @@ top-zone .ui-btn {
 }
 
 .boba-final-screen img {
-    max-width: 90vw;
-    max-height: 90vh;
+    width: 100vw;
+    height: 100vh;
     object-fit: contain;
 }
 
@@ -1116,57 +1121,41 @@ top-zone .ui-btn {
 
 .place-name-img {
     position: absolute;
-    width: auto;
-    height: auto;
-    max-width: 25vw;
-    max-height: 20vh;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     object-fit: contain;
-    pointer-events: auto;
-    cursor: pointer;
-    z-index: 26; /* Above name card and video */
+    pointer-events: none; /* Not clickable, only display */
+    cursor: default;
+    z-index: 28; /* Above inbox (24), name card (25), and video */
     transition: transform 0.1s;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 .place-name-img:active {
-    transform: translateX(-50%) scale(0.95);
+    transform: scale(0.95);
 }
 
-/* Position name images - stacked vertically in center */
-.place-name-img[data-name-index="0"] {
-    top: 30%;
-}
-
-.place-name-img[data-name-index="1"] {
-    top: 42%;
-}
-
-.place-name-img[data-name-index="2"] {
-    top: 54%;
-}
-
-.place-name-img[data-name-index="3"] {
-    top: 66%;
-}
+/* Name images are now full-screen like background, artist has centered them in the images */
 
 .place-use-button {
-    position: absolute;
-    width: auto;
-    height: auto;
-    max-width: 20vw;
-    max-height: 20vh;
-    object-fit: contain;
-    pointer-events: auto;
-    cursor: pointer;
-    z-index: 27; /* Above everything to remain clickable */
-    bottom: calc(15% + env(safe-area-inset-bottom, 0));
-    right: 10%;
-    transition: transform 0.1s;
-}
+        position: absolute;
+        width: 150px;
+        height: 250px;
+        max-width: 1200px;
+        max-height: 4100px;
+        object-fit: contain;
+        pointer-events: auto;
+        cursor: pointer;
+        z-index: 27;
+        bottom: 30%;
+        right: 30%;
+        transition: transform 0.1s;
+    }
+
 
 .place-use-button:active {
-    transform: scale(0.95);
+    transform: scale(2);
 }
 
 .place-back-button {
@@ -1211,8 +1200,9 @@ top-zone .ui-btn {
 
 .place-inbox {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.5);
     width: 100vw;
     height: 100vh;
     object-fit: contain;
