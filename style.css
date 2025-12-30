@@ -808,54 +808,55 @@ top-zone .ui-btn {
     /* Better alignment */
 }
 
-/* Cup Glass - Always Visible - same dimensions as all other images */
+/* Cup Glass - Always Visible - reduced by 12.5% */
 .boba-glass {
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    width: 87.5vw; /* Reduced by 12.5% */
+    height: 87.5vh; /* Reduced by 12.5% */
     object-fit: contain;
-    z-index: 5;
+    z-index: 1; /* Bottom layer */
     pointer-events: none;
 }
 
-/* Boba Layers - All positioned absolutely within cup container - same dimensions */
+/* Boba Layers - All positioned absolutely within cup container - reduced by 12.5% */
 .boba-layer {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 100vw;
-    height: 100vh;
+    width: 87.5vw; /* Reduced by 12.5% */
+    height: 87.5vh; /* Reduced by 12.5% */
     object-fit: contain;
     pointer-events: none;
 }
 
-/* Layer Z-Index Order (Bottom → Top) */
+/* Layer Z-Index Order: glass (bottom) → base → topping → ice → straw */
+/* When combination exists: glass (bottom) → combination → ice → straw */
 .boba-seeds-layer {
     z-index: 1; /* Boba seeds (initial) */
 }
 
+.boba-tea-layer {
+    z-index: 2; /* Tea Base (above glass) */
+}
+
 .boba-topping-layer {
-    z-index: 3; /* Topping (above tea base so it's visible) */
+    z-index: 3; /* Topping (above base) */
 }
 
 .boba-topping-layer.combined-image {
-    z-index: 7; /* Combined images on topmost */
-}
-
-.boba-tea-layer {
-    z-index: 2; /* Tea Base (below topping) */
+    z-index: 3; /* Combined image replaces base+topping, same level as topping */
 }
 
 .boba-ice-layer {
-    z-index: 4; /* Ice */
+    z-index: 4; /* Ice (above topping/combination) */
 }
 
 .boba-straw-layer {
-    z-index: 6; /* Top - Straw */
+    z-index: 5; /* Top - Straw (above ice) */
 }
 
-/* Name Display Layers (centered, larger) */
+/* Name Display Layers (centered, larger - 40% bigger) */
 .boba-name-layer {
     position: fixed;
     left: 50%;
@@ -863,26 +864,26 @@ top-zone .ui-btn {
     transform: translate(-50%, -50%);
     width: auto;
     height: auto;
-    max-width: 95vw;
-    max-height: 70vh;
+    max-width: calc(95vw * 1.4); /* 40% larger */
+    max-height: calc(70vh * 1.4); /* 40% larger */
     object-fit: contain;
     pointer-events: none;
-    z-index: 12;
+    z-index: 101; /* Above final screen (z-index 100) so names stay visible */
 }
 
-/* Position name layers - override the default 50% top with specific positions, moved 30px up */
+/* Position name layers - moved even further up (50px more) */
 .boba-tea-name-layer {
-    top: calc(9% + 120px + 30px - 30px);
+    top: calc(9% + 120px + 30px - 30px - 50px - 50px); /* Moved 50px more up */
     transform: translate(-50%, 0); /* Center horizontally, use top position */
 }
 
 .boba-topping-name-layer {
-    top: calc(10% + 120px + 60px - 30px);
+    top: calc(10% + 120px + 60px - 30px - 50px - 50px); /* Moved 50px more up */
     transform: translate(-50%, 0); /* Center horizontally, use top position */
 }
 
 .boba-sugar-name-layer {
-    top: calc(2% + 120px + 30px + 250px + 30px + 250px + 30px - 30px);
+    top: calc(2% + 120px + 30px + 250px + 30px + 250px + 30px - 30px - 50px - 50px); /* Moved 50px more up */
     transform: translate(-50%, 0); /* Center horizontally, use top position */
 }
 
@@ -1151,6 +1152,7 @@ top-zone .ui-btn {
         bottom: 30%;
         right: 30%;
         transition: transform 0.1s;
+        transform: scale(2.4);
     }
 
 
@@ -1202,7 +1204,7 @@ top-zone .ui-btn {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(1.5);
+    transform: translate(-50%, -50%) scale(1.0);
     width: 100vw;
     height: 100vh;
     object-fit: contain;

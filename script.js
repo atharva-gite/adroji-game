@@ -725,7 +725,6 @@ function updateBobaDisplay() {
             // Remove combined-image class if not using combined image
             if (toppingLayer) toppingLayer.classList.remove('combined-image');
             // No combined image - show both separately
-            if (toppingLayer) toppingLayer.classList.remove('combined-image');
             if (toppingLayer && topping.file) {
                 toppingLayer.src = `assets/adroji game/boba tea pt3/${topping.file}`;
                 toppingLayer.classList.remove('hidden');
