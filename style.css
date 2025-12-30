@@ -80,8 +80,9 @@ html, body {
 /* Start Screen */
 #start-screen {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    padding-top: 20%;
 }
 
 .start-btn {
@@ -99,9 +100,9 @@ html, body {
 }
 
 .start-btn img {
-    width: 440px;
+    width: 200px;
     height: auto;
-    max-width: 80vw;
+    max-width: 40vw;
 }
 
 /* Wake-Up Scene */
@@ -414,6 +415,10 @@ html, body {
     z-index: 1;
 }
 
+#dressup-shoes {
+    z-index: 1.5; /* Under bottoms */
+}
+
 #dressup-bottom {
     z-index: 2;
 }
@@ -422,24 +427,24 @@ html, body {
     z-index: 4;
 }
 
-#dressup-outerwear {
-    z-index: 5;
+#dressup-bag {
+    z-index: 5; /* Under hair, over tops */
 }
 
-#dressup-shoes {
-    z-index: 6;
+#dressup-outerwear {
+    z-index: 5.5;
 }
 
 #dressup-hair {
     z-index: 7;
 }
 
-#dressup-hair-accessory {
-    z-index: 8; /* Above hair, below necklace */
+#dressup-necklace {
+    z-index: 6; /* Under hair */
 }
 
-#dressup-necklace {
-    z-index: 8;
+#dressup-hair-accessory {
+    z-index: 8; /* Above hair */
 }
 
 #dressup-earrings {
@@ -448,10 +453,6 @@ html, body {
 
 #dressup-bangles {
     z-index: 10;
-}
-
-#dressup-bag {
-    z-index: 11;
 }
 
 #dressup-eyes {
@@ -503,9 +504,10 @@ html, body {
     padding: 0;
     transition: transform 0.1s;
     position: relative;
+    z-index: 30; /* Above sprite sheet */
     /* Invisible buttons that overlay clickable regions on sprite sheet */
-    min-width: 60px;
-    min-height: 60px;
+    min-width: 80px;
+    min-height: 80px;
 }
 
 .ui-btn:active {
@@ -515,8 +517,8 @@ html, body {
 /* TOP ZONE: Category Selectors - Fixed Screen Position */
 #top-zone {
     position: fixed;
-    top: 30px;
-    left: 70px;
+    top: 20px;
+    left: 80px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -525,15 +527,15 @@ html, body {
     pointer-events: none;
 }
 
-#top-zone .ui-btn {
+top-zone .ui-btn {
     pointer-events: auto;
     flex-shrink: 0;
-    width: 40px;
     height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-    max-width: 40px;
-    max-height: 40px;
+    width: 40px;
+    min-width: 30px;
+    min-height: 30px;
+    max-width: 80px;
+    max-height: 80px;
 }
 
 /* RIGHT PANEL: Appearance Controls - Fixed Screen Position */
@@ -557,10 +559,10 @@ html, body {
     flex-shrink: 0;
     width: 40px;
     height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-    max-width: 40px;
-    max-height: 40px;
+    min-width: 30px;
+    min-height: 30px;
+    max-width: 80px;
+    max-height: 80px;
     /* Buttons are visually defined in the sprite sheet */
 }
 
@@ -569,7 +571,7 @@ html, body {
     position: fixed;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%) scale(1.8);
+    transform: translate(-50%, -50%) scale(1.3);
     z-index: 25;
     pointer-events: auto;
     cursor: pointer;
@@ -595,7 +597,7 @@ html, body {
 /* BOTTOM ZONE: Reset / Done Buttons - Fixed Screen Position */
 #bottom-zone {
     position: fixed;
-    bottom: calc(3% + env(safe-area-inset-bottom, 0));
+    bottom: calc(env(safe-area-inset-bottom, 0));
     left: 0;
     right: 0;
     display: flex;
@@ -610,12 +612,12 @@ html, body {
 #bottom-zone .ui-btn {
     pointer-events: auto;
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     min-width: 40px;
     min-height: 40px;
-    max-width: 40px;
-    max-height: 40px;
+    max-width: 70px;
+    max-height: 70px;
 }
 
 #reset-btn {
@@ -874,6 +876,10 @@ html, body {
     top: calc(25% - 75px);
 }
 
+.boba-sugar-name-layer {
+    top: calc(35% - 75px);
+}
+
 /* Button Areas (invisible clickable regions over buttons.png) */
 .boba-button-area {
     position: fixed;
@@ -943,6 +949,21 @@ html, body {
 }
 
 /* Option Button Container (not rendering image, just for state) */
+.boba-option-button {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    max-width: 200px;
+    max-height: 100px;
+    object-fit: contain;
+    z-index: 11;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
 .boba-option-button-container {
     display: none; /* Not rendering the option button image */
 }
@@ -956,7 +977,8 @@ html, body {
     justify-content: center;
     z-index: 100;
     background: rgba(0, 0, 0, 0.8);
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 .boba-final-screen.hidden {
@@ -1112,11 +1134,19 @@ html, body {
 
 /* Position name images - stacked vertically in center */
 .place-name-img[data-name-index="0"] {
-    top: 35%;
+    top: 30%;
 }
 
 .place-name-img[data-name-index="1"] {
-    top: 55%;
+    top: 42%;
+}
+
+.place-name-img[data-name-index="2"] {
+    top: 54%;
+}
+
+.place-name-img[data-name-index="3"] {
+    top: 66%;
 }
 
 .place-use-button {

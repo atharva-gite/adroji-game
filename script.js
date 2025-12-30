@@ -91,20 +91,20 @@ function initWakeUp() {
         sleepingVideo.classList.remove('hidden');
         sleepingVideo.onended = () => {
             sleepingVideo.classList.add('hidden');
-            // Step 1: Show alexa__wake_up1.png (3 seconds)
-            showElement('alexa-wake-up-1');
+    // Step 1: Show alexa__wake_up1.png (3 seconds)
+    showElement('alexa-wake-up-1');
+    
+    // Step 2: After 3 seconds, show alexa__wake_up2.png (3 seconds)
+    setTimeout(() => {
+        hideElement('alexa-wake-up-1');
+        showElement('alexa-wake-up-2');
+        
+        // Step 3: After 3 seconds, show alexa__wake_up3.png (3 seconds)
+        setTimeout(() => {
+            hideElement('alexa-wake-up-2');
+            showElement('alexa-wake-up-3');
             
-            // Step 2: After 3 seconds, show alexa__wake_up2.png (3 seconds)
-            setTimeout(() => {
-                hideElement('alexa-wake-up-1');
-                showElement('alexa-wake-up-2');
-                
-                // Step 3: After 3 seconds, show alexa__wake_up3.png (3 seconds)
-                setTimeout(() => {
-                    hideElement('alexa-wake-up-2');
-                    showElement('alexa-wake-up-3');
-                    
-                    // Step 4: After 3 seconds, show choice time with sleeping.png AND choice button at the same time
+            // Step 4: After 3 seconds, show choice time with sleeping.png AND choice button at the same time
                     setTimeout(() => {
                         hideElement('alexa-wake-up-3');
                         showElement('choice-time-state');
@@ -124,14 +124,14 @@ function initWakeUp() {
             setTimeout(() => {
                 hideElement('alexa-wake-up-2');
                 showElement('alexa-wake-up-3');
-                setTimeout(() => {
-                    hideElement('alexa-wake-up-3');
-                    showElement('choice-time-state');
-                    showElement('choice-screen');
-                    setupChoiceHandlers();
-                }, 3000);
+            setTimeout(() => {
+                hideElement('alexa-wake-up-3');
+                showElement('choice-time-state');
+                showElement('choice-screen');
+                setupChoiceHandlers();
             }, 3000);
         }, 3000);
+    }, 3000);
     }
 }
 
@@ -163,59 +163,17 @@ function setupChoiceHandlers() {
     if (newRetryButton) {
         newRetryButton.addEventListener('click', () => {
             hideElement('option1-retry');
-            // Loop back to sleeping video, then alexa_wake_up_1
+            // Loop back to choice screen (not sleeping video)
             setTimeout(() => {
                 // Reset all states first
-                hideElement('alexa-wake-up-1');
-                hideElement('alexa-wake-up-2');
-                hideElement('alexa-wake-up-3');
-                hideElement('choice-time-state');
-                hideElement('choice-screen');
-                
-                // Play sleeping video for 2 seconds
-                const sleepingVideo = document.getElementById('sleeping-video');
-                if (sleepingVideo) {
-                    sleepingVideo.currentTime = 0;
-                    sleepingVideo.classList.remove('hidden');
-                    sleepingVideo.onended = () => {
-                        sleepingVideo.classList.add('hidden');
-                        // Show alexa_wake_up_1
-                        showElement('alexa-wake-up-1');
-                        // Continue the sequence from alexa wake up 1
-                        setTimeout(() => {
-                            hideElement('alexa-wake-up-1');
-                            showElement('alexa-wake-up-2');
-                            setTimeout(() => {
-                                hideElement('alexa-wake-up-2');
-                                showElement('alexa-wake-up-3');
-                                setTimeout(() => {
-                                    hideElement('alexa-wake-up-3');
-                                    showElement('choice-time-state');
-                                    showElement('choice-screen');
-                                    setupChoiceHandlers();
-                                }, 3000);
-                            }, 3000);
-                        }, 3000);
-                    };
-                    sleepingVideo.play().catch(e => console.log('Sleeping video play failed:', e));
-                } else {
-                    // Fallback - show alexa wake up 1 directly
-                    showElement('alexa-wake-up-1');
-                    setTimeout(() => {
-                        hideElement('alexa-wake-up-1');
-                        showElement('alexa-wake-up-2');
-                        setTimeout(() => {
-                            hideElement('alexa-wake-up-2');
-                            showElement('alexa-wake-up-3');
-                            setTimeout(() => {
-                                hideElement('alexa-wake-up-3');
-                                showElement('choice-time-state');
-                                showElement('choice-screen');
-                                setupChoiceHandlers();
-                            }, 3000);
-                        }, 3000);
-                    }, 3000);
-                }
+                    hideElement('alexa-wake-up-1');
+                        hideElement('alexa-wake-up-2');
+                            hideElement('alexa-wake-up-3');
+                hideElement('option1-image');
+                // Show choice screen again
+                            showElement('choice-time-state');
+                            showElement('choice-screen');
+                            setupChoiceHandlers();
             }, 500);
         });
     }
@@ -355,31 +313,31 @@ function playDressUpLoading(callback) {
 
 // Boba Game State
 const bobaState = {
-    teaBase: 0,      // Index in teaBases array
-    topping: 0,      // Index in toppings array
-    sugar: 0,        // Index in sugarLevels array (0%, 25%, 50%, 100%)
-    ice: false,      // Boolean - ice on/off
-    straw: 0,        // Index in straws array
-    started: false,  // Has player clicked start?
-    locked: false,   // Is game locked (after Done)?
-    doneClicks: 0,   // Track done button clicks
-    hasMadeSelection: false  // Track if user has made any selection (starts empty)
+    phase: 'toppings', // 'toppings', 'drinks', 'sugar', 'ice', 'straw', 'done'
+    teaBase: -1,      // Index in teaBases array (-1 = not selected)
+    topping: -1,      // Index in toppings array (-1 = not selected)
+    sugar: -1,        // Index in sugarLevels array (-1 = not selected)
+    ice: false,       // Boolean - ice on/off
+    straw: -1,        // Index in straws array (-1 = not selected)
+    started: false,   // Has player clicked start?
+    locked: false,    // Is game locked (after Done)?
+    doneClicks: 0     // Track done button clicks
 };
 
-// Boba Game Assets - Tea Bases
+// Boba Game Assets - Tea Bases (in order: MS → RO → LBT → Lav)
 const teaBases = [
-    { name: 'lavender', base: 'lavendar base.png', displayName: 'lavendar .png', code: 'Lav' },
-    { name: 'litchi black tea', base: 'litchi black tes base.png', displayName: 'litchi black tea.png', code: 'LBT' },
     { name: 'matcha strawberry', base: 'matcha strawberry base.png', displayName: 'matcha strawberry .png', code: 'MS' },
-    { name: 'roasted oolong', base: 'roasted oolong base.png', displayName: 'roasted oolong.png', code: 'RO' }
+    { name: 'roasted oolong', base: 'roasted oolong base.png', displayName: 'roasted oolong.png', code: 'RO' },
+    { name: 'litchi black tea', base: 'litchi black tes base.png', displayName: 'litchi black tea.png', code: 'LBT' },
+    { name: 'lavender', base: 'lavendar base.png', displayName: 'lavendar .png', code: 'Lav' }
 ];
 
-// Boba Game Assets - Toppings
+// Boba Game Assets - Toppings (in order: boba → nata de coco → almond tofu → jinzou)
 const toppings = [
-    { name: 'boba', file: 'boba_seeds.png', code: 'boba', displayName: 'boba.png' },
-    { name: 'jinzou', file: 'jinzou_toppings.png', code: 'JZ', displayName: 'jinzou.png' },
-    { name: 'nata de coco', file: 'nata de coco_topping.png', code: 'NDC', displayName: 'nata de coco.png' },
-    { name: 'almond tofu', file: 'almond tofu_t.png', code: 'AT', displayName: 'almond tofu label.png' }
+    { name: 'boba', file: 'boba.png', code: 'boba', displayName: 'boba.png' },
+    { name: 'nata de coco', file: 'nata de coco.png', code: 'NDC', displayName: 'nata de coco.png' },
+    { name: 'almond tofu', file: 'almond tofu label.png', code: 'AT', displayName: 'almond tofu label.png' },
+    { name: 'jinzou', file: 'jinzou.png', code: 'JZ', displayName: 'jinzou.png' }
 ];
 
 // Get Combined Topping+Tea Image
@@ -459,17 +417,15 @@ function initBobaGame() {
     if (existing) existing.remove();
     
     // Reset state - start with empty glass (no selections)
-    bobaState.teaBase = 0;
-    bobaState.topping = 0;
-    bobaState.sugar = 0;
+    bobaState.phase = 'toppings';
+    bobaState.teaBase = -1;
+    bobaState.topping = -1;
+    bobaState.sugar = -1;
     bobaState.ice = false;
-    bobaState.straw = 0;
+    bobaState.straw = -1;
     bobaState.started = false;
     bobaState.locked = false;
     bobaState.doneClicks = 0;
-    bobaState.hasMadeSelection = false; // Start with empty glass
-    
-    // Don't initialize layers - keep glass empty until user makes selections
     
     // Create boba-root container (RENDER ONCE)
     const bobaRoot = document.createElement('div');
@@ -587,6 +543,22 @@ function initBobaGame() {
     toppingNameLayer.alt = 'Topping Name';
     gameScreen.appendChild(toppingNameLayer);
     
+    // Sugar Name Display (between option button)
+    const sugarNameLayer = document.createElement('img');
+    sugarNameLayer.id = 'boba-sugar-name';
+    sugarNameLayer.className = 'boba-name-layer boba-sugar-name-layer hidden';
+    sugarNameLayer.alt = 'Sugar Name';
+    gameScreen.appendChild(sugarNameLayer);
+    
+    // Option Button (clickable, appears during customization)
+    const optionButton = document.createElement('img');
+    optionButton.id = 'boba-option-button';
+    optionButton.src = 'assets/adroji game/boba tea pt3/option button.png';
+    optionButton.alt = 'Option Button';
+    optionButton.className = 'boba-option-button hidden';
+    optionButton.style.cursor = 'pointer';
+    gameScreen.appendChild(optionButton);
+    
     // CLICKABLE BUTTON AREAS (positioned over buttons.png sprite sheet)
     // Topping - Top Left
     const toppingBtn = createButtonArea('topping', 'boba-topping-btn', 'top-left');
@@ -612,12 +584,6 @@ function initBobaGame() {
     const doneBtn = createButtonArea('done', 'boba-done-btn', 'done-position');
     gameScreen.appendChild(doneBtn);
     
-    // OPTION BUTTON CONTAINER (not rendering the image, just for state management)
-    const optionButtonContainer = document.createElement('div');
-    optionButtonContainer.id = 'boba-option-button-container';
-    optionButtonContainer.className = 'boba-option-button-container hidden';
-    // Don't add the image - user doesn't want it rendered
-    gameScreen.appendChild(optionButtonContainer);
     
     bobaRoot.appendChild(gameScreen);
     
@@ -648,14 +614,13 @@ function createButtonArea(category, id, position) {
 
 // Setup Boba Event Handlers
 function setupBobaHandlers() {
-    let activeCategory = null;
-    
     // Start Button
     const startBtn = document.querySelector('.boba-start-btn');
     if (startBtn) {
         startBtn.onclick = () => {
             if (bobaState.locked) return;
             bobaState.started = true;
+            bobaState.phase = 'toppings';
             const startScreen = document.getElementById('boba-start-screen');
             if (startScreen) startScreen.classList.add('hidden');
             const gameScreen = document.getElementById('boba-game-screen');
@@ -663,213 +628,288 @@ function setupBobaHandlers() {
         };
     }
     
-    // Category Buttons (Topping, Sugar, Straw, Ice, Tea Base)
-    document.querySelectorAll('.boba-button-area').forEach(btn => {
-        btn.onclick = (e) => {
+    // Buttons.png clickable area - triggers current phase action
+    const buttonsSheet = document.getElementById('boba-buttons-sheet');
+    if (buttonsSheet) {
+        buttonsSheet.style.pointerEvents = 'auto';
+        buttonsSheet.style.cursor = 'pointer';
+        buttonsSheet.onclick = () => {
             if (!bobaState.started || bobaState.locked) return;
-            const category = btn.dataset.category;
-            
-            if (category === 'done') {
-                // Done button clicked - track clicks
-                bobaState.doneClicks = (bobaState.doneClicks || 0) + 1;
-                
-                if (bobaState.doneClicks >= 2) {
-                    // Second click - redirect to place part (PART 4)
-                    bobaState.locked = true;
-                    const finalScreen = document.getElementById('boba-final-screen');
-                    if (finalScreen) finalScreen.classList.remove('hidden');
-                    // Transition to PART 4.1 after showing final screen
-                    setTimeout(() => {
-                        startPlaceSelection();
-                    }, 2000);
-                } else {
-                    // First click - show final screen
-                    const finalScreen = document.getElementById('boba-final-screen');
-                    if (finalScreen) finalScreen.classList.remove('hidden');
-                }
-                return;
-            }
-            
-            if (category === 'ice') {
+            handleBobaPhaseClick();
+        };
+    }
+    
+    // Option Button - cycles to next option in current phase
+    const optionButton = document.getElementById('boba-option-button');
+    if (optionButton) {
+        optionButton.onclick = () => {
+            if (!bobaState.started || bobaState.locked) return;
+            handleOptionButtonClick();
+        };
+    }
+    
+    // Done Button
+    const doneBtn = document.getElementById('boba-done-btn');
+    if (doneBtn) {
+        doneBtn.onclick = () => {
+            if (!bobaState.started || bobaState.locked) return;
+            handleDoneButton();
+        };
+    }
+}
+
+// Handle click on buttons.png based on current phase
+function handleBobaPhaseClick() {
+    if (bobaState.phase === 'toppings') {
+        // Start toppings selection - show first topping
+        if (bobaState.topping === -1) {
+            bobaState.topping = 0;
+        }
+        updateBobaDisplay();
+    } else if (bobaState.phase === 'drinks') {
+        // Start drinks selection - show first drink
+        if (bobaState.teaBase === -1) {
+            bobaState.teaBase = 0;
+        }
+        updateBobaDisplay();
+    } else if (bobaState.phase === 'sugar') {
+        // Start sugar selection - show first sugar level
+        if (bobaState.sugar === -1) {
+            bobaState.sugar = 0;
+        }
+        updateBobaDisplay();
+    } else if (bobaState.phase === 'ice') {
                 // Toggle ice
                 bobaState.ice = !bobaState.ice;
-                updateBobaLayers();
-            } else {
-                // Check if click is near middle of button (for cycling)
-                const rect = btn.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                const buttonWidth = rect.width;
-                const middleThreshold = buttonWidth * 0.3; // 30% from edges
-                
-                // Set active category
-                activeCategory = category;
-                
-                // Cycle based on click position
-                let direction = 1; // Default forward
-                if (clickX <= middleThreshold) {
-                    // Click on left side - cycle backward
-                    direction = -1;
-                }
-                
-                // Mark that user has made a selection
-                bobaState.hasMadeSelection = true;
-                
-                // Always cycle when button is clicked
-                cycleBobaCategory(category, direction);
-            }
-        };
-    });
-}
-
-// Show Option Button
-function showOptionButton() {
-    const optionContainer = document.getElementById('boba-option-button-container');
-    if (optionContainer) optionContainer.classList.remove('hidden');
-}
-
-// Hide Option Button
-function hideOptionButton() {
-    const optionContainer = document.getElementById('boba-option-button-container');
-    if (optionContainer) optionContainer.classList.add('hidden');
-}
-
-// Cycle Boba Category
-function cycleBobaCategory(category, direction) {
-    let array, stateKey;
-    
-    if (category === 'tea-base') {
-        array = teaBases;
-        stateKey = 'teaBase';
-    } else if (category === 'topping') {
-        array = toppings;
-        stateKey = 'topping';
-    } else if (category === 'sugar') {
-        array = sugarLevels;
-        stateKey = 'sugar';
-    } else if (category === 'straw') {
-        array = straws;
-        stateKey = 'straw';
-    } else {
-        return;
+        updateBobaDisplay();
+    } else if (bobaState.phase === 'straw') {
+        // Start straw selection - show first straw
+        if (bobaState.straw === -1) {
+            bobaState.straw = 0;
+        }
+        updateBobaDisplay();
     }
-    
-    const currentIndex = bobaState[stateKey] || 0;
-    let nextIndex = currentIndex + direction;
-    
-    // Wrap around
-    if (nextIndex < 0) nextIndex = array.length - 1;
-    if (nextIndex >= array.length) nextIndex = 0;
-    
-    bobaState[stateKey] = nextIndex;
-    updateBobaLayers();
 }
 
-
-// Update Boba Layers (Swap images only, no re-render)
-function updateBobaLayers() {
-    // Get all layer elements first
-    const teaBaseLayer = document.getElementById('boba-tea-base');
-    const toppingLayer = document.getElementById('boba-topping');
-    const bobaSeeds = document.getElementById('boba-seeds');
-    
-    // Only show layers if user has made a selection (starts empty)
-    if (!bobaState.hasMadeSelection) {
-        // Keep everything hidden - empty glass
-        if (toppingLayer) toppingLayer.classList.add('hidden');
-        if (teaBaseLayer) teaBaseLayer.classList.add('hidden');
-        if (bobaSeeds) bobaSeeds.classList.add('hidden');
-        return;
+// Handle option button click - cycles to next option
+function handleOptionButtonClick() {
+    if (bobaState.phase === 'toppings') {
+        // Cycle to next topping
+        const prevTopping = bobaState.topping;
+        bobaState.topping = (bobaState.topping + 1) % toppings.length;
+        updateBobaDisplay();
+        // If we've cycled back to first topping, move to drinks phase
+        if (bobaState.topping === 0 && prevTopping === toppings.length - 1) {
+            bobaState.phase = 'drinks';
+            bobaState.teaBase = -1; // Reset for drinks phase
+            const optionButton = document.getElementById('boba-option-button');
+            if (optionButton) optionButton.classList.add('hidden');
+        }
+    } else if (bobaState.phase === 'drinks') {
+        // Cycle to next drink
+        const prevTeaBase = bobaState.teaBase;
+        bobaState.teaBase = (bobaState.teaBase + 1) % teaBases.length;
+        updateBobaDisplay();
+        // If we've cycled back to first drink, move to sugar phase
+        if (bobaState.teaBase === 0 && prevTeaBase === teaBases.length - 1) {
+            bobaState.phase = 'sugar';
+            bobaState.sugar = -1; // Reset for sugar phase
+            const optionButton = document.getElementById('boba-option-button');
+            if (optionButton) optionButton.classList.add('hidden');
+        }
+    } else if (bobaState.phase === 'sugar') {
+        // Cycle to next sugar level
+        const prevSugar = bobaState.sugar;
+        bobaState.sugar = (bobaState.sugar + 1) % sugarLevels.length;
+        updateBobaDisplay();
+        // If we've cycled back to first sugar, move to ice phase
+        if (bobaState.sugar === 0 && prevSugar === sugarLevels.length - 1) {
+            bobaState.phase = 'ice';
+            const optionButton = document.getElementById('boba-option-button');
+            if (optionButton) optionButton.classList.add('hidden');
+        }
+    } else if (bobaState.phase === 'straw') {
+        // Cycle to next straw
+        bobaState.straw = (bobaState.straw + 1) % straws.length;
+        updateBobaDisplay();
     }
-    
-    // Update Tea Base (renders inside cup) - only if no combined image will be shown
-    // We'll handle this in the topping section
-    
-    // Update Tea Base Name Display
-    const teaBaseNameLayer = document.getElementById('boba-tea-name');
-    if (teaBaseNameLayer) {
-        const teaBase = teaBases[bobaState.teaBase];
-        if (teaBase && teaBase.displayName) {
-            teaBaseNameLayer.src = `assets/adroji game/boba tea pt3/${teaBase.displayName}`;
-            teaBaseNameLayer.classList.remove('hidden');
-        } else {
-            teaBaseNameLayer.classList.add('hidden');
+}
+
+// Handle done button
+function handleDoneButton() {
+    if (bobaState.phase === 'straw' && bobaState.straw >= 0) {
+        // Show final screen
+        const finalScreen = document.getElementById('boba-final-screen');
+        if (finalScreen) {
+            finalScreen.classList.remove('hidden');
+            // Make final screen clickable to go to place 4.1
+            finalScreen.style.cursor = 'pointer';
+            finalScreen.onclick = () => {
+                startPlaceSelection();
+            };
         }
     }
+}
+
+// Update Boba Display based on current phase
+function updateBobaDisplay() {
+    const optionButton = document.getElementById('boba-option-button');
+    const toppingNameLayer = document.getElementById('boba-topping-name');
+    const sugarNameLayer = document.getElementById('boba-sugar-name');
+    const teaBaseNameLayer = document.getElementById('boba-tea-name');
     
-    // Update Topping (use combined image with tea base)
-    if (toppingLayer) {
-        // Always use combined image when both tea and topping are selected
-        // The combined image shows the topping WITH the tea base
+    if (bobaState.phase === 'toppings') {
+        // Show topping in glass + topping name + option button
+        if (bobaState.topping >= 0) {
+            const topping = toppings[bobaState.topping];
+            // Show topping image in glass
+            const toppingLayer = document.getElementById('boba-topping');
+            if (toppingLayer && topping.file) {
+                toppingLayer.src = `assets/adroji game/boba tea pt3/${topping.file}`;
+                toppingLayer.classList.remove('hidden');
+            }
+            // Show topping name between option button
+            if (toppingNameLayer && topping.displayName) {
+                toppingNameLayer.src = `assets/adroji game/boba tea pt3/${topping.displayName}`;
+                toppingNameLayer.classList.remove('hidden');
+            }
+            // Show option button
+            if (optionButton) {
+                optionButton.classList.remove('hidden');
+            }
+        }
+    } else if (bobaState.phase === 'drinks') {
+        // Show combined image + base + drink name
+        if (bobaState.topping >= 0 && bobaState.teaBase >= 0) {
+            const combinedFile = getCombinedToppingImage(bobaState.teaBase, bobaState.topping);
+            const toppingLayer = document.getElementById('boba-topping');
+            const teaBaseLayer = document.getElementById('boba-tea-base');
+            const teaBase = teaBases[bobaState.teaBase];
+            
+            if (combinedFile && toppingLayer) {
+                toppingLayer.src = `assets/adroji game/boba tea pt3/${combinedFile}`;
+                toppingLayer.classList.remove('hidden');
+            }
+            if (teaBase && teaBaseLayer) {
+                teaBaseLayer.src = `assets/adroji game/boba tea pt3/${teaBase.base}`;
+                teaBaseLayer.classList.remove('hidden');
+            }
+            if (teaBase && teaBaseNameLayer && teaBase.displayName) {
+                teaBaseNameLayer.src = `assets/adroji game/boba tea pt3/${teaBase.displayName}`;
+                teaBaseNameLayer.classList.remove('hidden');
+            }
+            // Keep topping name visible
+            if (toppingNameLayer) {
+                const topping = toppings[bobaState.topping];
+                if (topping && topping.displayName) {
+                    toppingNameLayer.src = `assets/adroji game/boba tea pt3/${topping.displayName}`;
+                    toppingNameLayer.classList.remove('hidden');
+                }
+            }
+            if (optionButton) {
+                optionButton.classList.remove('hidden');
+            }
+        }
+    } else if (bobaState.phase === 'sugar') {
+        // Show sugar name between option button
+        if (bobaState.sugar >= 0) {
+            const sugar = sugarLevels[bobaState.sugar];
+            if (sugarNameLayer && sugar.file) {
+                sugarNameLayer.src = `assets/adroji game/boba tea pt3/${sugar.file}`;
+                sugarNameLayer.classList.remove('hidden');
+            }
+            if (optionButton) {
+                optionButton.classList.remove('hidden');
+            }
+            // Keep previous selections visible
+            updatePreviousSelections();
+        }
+    } else if (bobaState.phase === 'ice') {
+        // Ice toggle - keep previous selections visible
+        updatePreviousSelections();
+        const iceLayer = document.getElementById('boba-ice');
+        if (iceLayer) {
+            if (bobaState.ice) {
+                iceLayer.classList.remove('hidden');
+            } else {
+                iceLayer.classList.add('hidden');
+            }
+        }
+        // After ice is toggled, automatically move to straw phase
+        if (bobaState.ice) {
+            bobaState.phase = 'straw';
+            bobaState.straw = -1; // Reset for straw phase
+        }
+    } else if (bobaState.phase === 'straw') {
+        // Show straw
+        updatePreviousSelections();
+        const strawLayer = document.getElementById('boba-straw');
+        if (strawLayer && bobaState.straw >= 0) {
+            const straw = straws[bobaState.straw];
+            if (straw) {
+                strawLayer.src = `assets/adroji game/boba tea pt3/${straw}`;
+                strawLayer.classList.remove('hidden');
+            }
+        }
+        if (optionButton) {
+            optionButton.classList.remove('hidden');
+        }
+    }
+}
+
+// Update previous selections to remain visible
+function updatePreviousSelections() {
+    // Keep topping visible
+    if (bobaState.topping >= 0) {
         const combinedFile = getCombinedToppingImage(bobaState.teaBase, bobaState.topping);
+        const toppingLayer = document.getElementById('boba-topping');
+        const teaBaseLayer = document.getElementById('boba-tea-base');
         
-        if (combinedFile) {
-            // Show combined image (e.g., LBT jinzou.png when LBT + jinzou selected)
+        if (combinedFile && toppingLayer) {
             toppingLayer.src = `assets/adroji game/boba tea pt3/${combinedFile}`;
             toppingLayer.classList.remove('hidden');
-            // Hide tea base layer when combined topping is shown (combined image includes tea)
-            if (teaBaseLayer) {
-                teaBaseLayer.classList.add('hidden');
-            }
-            // Show boba seeds when topping is selected (any topping including boba)
-            if (bobaSeeds) {
-                bobaSeeds.classList.remove('hidden');
-            }
-        } else {
-            // No combined file - show tea base separately if tea is selected
-            toppingLayer.classList.add('hidden');
-            if (teaBaseLayer) {
-                const teaBase = teaBases[bobaState.teaBase];
-                if (teaBase) {
-                    teaBaseLayer.src = `assets/adroji game/boba tea pt3/${teaBase.base}`;
-                    teaBaseLayer.classList.remove('hidden');
-                } else {
-                    teaBaseLayer.classList.add('hidden');
-                }
-            }
-            // Show boba seeds only when boba topping is specifically selected (index 0)
-            if (bobaSeeds) {
-                if (bobaState.topping === 0) {
-                    bobaSeeds.classList.remove('hidden');
-                } else {
-                    bobaSeeds.classList.add('hidden');
-                }
+        }
+        if (bobaState.teaBase >= 0 && teaBaseLayer) {
+            const teaBase = teaBases[bobaState.teaBase];
+            if (teaBase) {
+                teaBaseLayer.src = `assets/adroji game/boba tea pt3/${teaBase.base}`;
+                teaBaseLayer.classList.remove('hidden');
             }
         }
     }
-    
-    // Update Topping Name Display
-    const toppingNameLayer = document.getElementById('boba-topping-name');
-    if (toppingNameLayer) {
+    // Keep drink name visible
+    if (bobaState.teaBase >= 0) {
+        const teaBaseNameLayer = document.getElementById('boba-tea-name');
+        const teaBase = teaBases[bobaState.teaBase];
+        if (teaBaseNameLayer && teaBase && teaBase.displayName) {
+            teaBaseNameLayer.src = `assets/adroji game/boba tea pt3/${teaBase.displayName}`;
+            teaBaseNameLayer.classList.remove('hidden');
+        }
+    }
+    // Keep topping name visible
+    if (bobaState.topping >= 0) {
+        const toppingNameLayer = document.getElementById('boba-topping-name');
         const topping = toppings[bobaState.topping];
-        if (topping && topping.displayName) {
+        if (toppingNameLayer && topping && topping.displayName) {
             toppingNameLayer.src = `assets/adroji game/boba tea pt3/${topping.displayName}`;
             toppingNameLayer.classList.remove('hidden');
-        } else {
-            toppingNameLayer.classList.add('hidden');
         }
     }
-    
-    // Update Ice
-    const iceLayer = document.getElementById('boba-ice');
-    if (iceLayer) {
-        if (bobaState.ice) {
-            iceLayer.classList.remove('hidden');
-        } else {
-            iceLayer.classList.add('hidden');
+    // Keep sugar visible
+    if (bobaState.sugar >= 0) {
+        const sugarNameLayer = document.getElementById('boba-sugar-name');
+        const sugar = sugarLevels[bobaState.sugar];
+        if (sugarNameLayer && sugar && sugar.file) {
+            sugarNameLayer.src = `assets/adroji game/boba tea pt3/${sugar.file}`;
+            sugarNameLayer.classList.remove('hidden');
         }
     }
-    
-    // Update Straw
-    const strawLayer = document.getElementById('boba-straw');
-    if (strawLayer) {
-        const straw = straws[bobaState.straw];
-        if (straw) {
-            strawLayer.src = `assets/adroji game/boba tea pt3/${straw}`;
-            strawLayer.classList.remove('hidden');
-        } else {
-            strawLayer.classList.add('hidden');
-        }
-    }
+}
+
+
+// Legacy function - replaced by updateBobaDisplay, but kept for compatibility
+function updateBobaLayers() {
+    updateBobaDisplay();
 }
 
 // Dress-Up Loading (Initial)
@@ -878,6 +918,8 @@ function initDressUpLoading() {
     destroyDressUp();
     
     const loadingFrame = document.getElementById('loading-progress-frame');
+    if (!loadingFrame) return;
+    
     const loadingFrames = [
         'loading_1.png',
         'loading_2.png',
@@ -885,21 +927,36 @@ function initDressUpLoading() {
         'loading_4.png'
     ];
     
-    // Start from frame 1 (loading_2.png) since loading_1.png is already set in HTML
-    // Flash each image sequentially: loading_1 → loading_2 → loading_3 → loading_4
-    // Interval: 0.25 seconds per frame
-    let frameIndex = 1;
+    // Loop the frames a few times (3 times) with increasing size
+    let loopCount = 0;
+    let frameIndex = 0;
+    const maxLoops = 3;
+    let currentScale = 1;
+    const scaleIncrement = 0.3;
+    
+    // Reset scale initially
+    loadingFrame.style.transform = 'scale(1)';
+    
     const frameInterval = setInterval(() => {
         if (frameIndex < loadingFrames.length) {
             loadingFrame.src = `assets/adroji game/dress up pt 2/${loadingFrames[frameIndex]}`;
+            // Increase size gradually
+            currentScale = 1 + (loopCount * scaleIncrement) + (frameIndex * scaleIncrement / loadingFrames.length);
+            loadingFrame.style.transform = `scale(${currentScale})`;
             frameIndex++;
         } else {
+            frameIndex = 0;
+            loopCount++;
+            if (loopCount >= maxLoops) {
             clearInterval(frameInterval);
-            // After loading_4, immediately transition to dress-up scene
+                // Reset scale
+                loadingFrame.style.transform = 'scale(1)';
+                // After loops, immediately transition to dress-up scene
             setTimeout(() => {
                 showScene('dress-up-scene');
                 initDressUp();
             }, 250);
+            }
         }
     }, 250);
 }
@@ -1443,21 +1500,38 @@ function onDoneDressUp() {
     // Lock UI to prevent further interactions
     lockDressUpUI();
     
-    // Hide UI layer to show only completed outfit on background
-    const uiLayer = document.getElementById('dressup-ui');
-    if (uiLayer) {
-        uiLayer.style.display = 'none';
+    // Hide button sprite sheet (dress_up_game buttons.png)
+    const buttonSpriteSheet = document.getElementById('button-sprite-sheet');
+    if (buttonSpriteSheet) {
+        buttonSpriteSheet.style.display = 'none';
     }
     
+    // Show final header button (dress_up_game final header button.png)
+    const uiLayer = document.getElementById('dressup-ui');
+    if (uiLayer) {
+        const finalHeader = document.createElement('img');
+        finalHeader.id = 'dressup-final-header';
+        finalHeader.src = 'assets/adroji game/dress up pt 2/dress_up_game final header button.png';
+        finalHeader.alt = 'Final Header';
+        finalHeader.className = 'dressup-final-header';
+        finalHeader.style.position = 'fixed';
+        finalHeader.style.left = '50%';
+        finalHeader.style.top = '50%';
+        finalHeader.style.transform = 'translate(-50%, -50%)';
+        finalHeader.style.zIndex = '100';
+        finalHeader.style.pointerEvents = 'none';
+        uiLayer.appendChild(finalHeader);
+    }
+        
     // Show completed outfit on background for a moment, then transition
-    setTimeout(() => {
-        // Show dress-up loading screen (same as beginning)
-        showScene('dress-up-loading');
-        playDressUpLoadingSequence(() => {
+        setTimeout(() => {
+            // Show dress-up loading screen (same as beginning)
+            showScene('dress-up-loading');
+            playDressUpLoadingSequence(() => {
             // After loading, transition to boba section
-            destroyDressUp();
-            startBobaGame();
-        });
+                destroyDressUp();
+                startBobaGame();
+            });
     }, 2000); // Show completed outfit for 2 seconds
 }
 
@@ -1525,7 +1599,8 @@ const placeConfig = {
         card: 'palais_royal-namecard.png',
         names: [
             { img: 'shraddha 1.png', audio: 'shraddha.ogg', video: 'redpandacompress_1767002444.MP4' },
-            { img: 'mummum 1.png', audio: 'mummum.ogg', video: 'redpandacompress_1767002444.MP4' }
+            { img: 'mummum 1.png', audio: 'mummum.ogg', video: 'redpandacompress_1767002444.MP4' },
+            { img: 'mummum 1.png', audio: 'mummum 2.ogg', video: 'redpandacompress_1767002444.MP4' }
         ],
         folder: 'palais royal garden'
     },
@@ -1546,6 +1621,8 @@ const placeConfig = {
         bg: 'place_des_vosges-bg.png',
         card: 'place_des_vosges.namecard.png',
         names: [
+            { img: 'abonti 1.png', audio: null, video: 'redpandacompress_1767002235.MP4' },
+            { img: 'abonti 1.png', audio: null, video: 'redpandacompress_1767002235.MP4' },
             { img: 'abonti 1.png', audio: null, video: 'redpandacompress_1767002235.MP4' },
             { img: 'adi 1.png', audio: 'adi.ogg', video: 'redpandacompress_1767002235.MP4' }
         ],
