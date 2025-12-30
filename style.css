@@ -86,13 +86,14 @@ html, body {
 }
 
 .start-btn {
-    position: relative;
-    z-index: 10;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    transition: transform 0.2s;
+        position: relative;
+        top: 30%;
+        z-index: 10;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        transition: transform 0.2s;
 }
 
 .start-btn:active {
@@ -506,8 +507,8 @@ html, body {
     position: relative;
     z-index: 30; /* Above sprite sheet */
     /* Invisible buttons that overlay clickable regions on sprite sheet */
-    min-width: 80px;
-    min-height: 80px;
+    min-width: 40px;
+    min-height: 40px;
 }
 
 .ui-btn:active {
